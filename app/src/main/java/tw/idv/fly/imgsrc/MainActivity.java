@@ -12,10 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -24,9 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ImageView myImageView;
@@ -38,11 +33,31 @@ public class MainActivity extends AppCompatActivity {
             "http://net.jcin.com.tw/p3.jpg"
     };
 
+    DataDef[] dataDef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dataDef = new DataDef[3];
+
+        dataDef[0] = new DataDef();
+        dataDef[0].img_url = "http://net.jcin.com.tw/p1.jpg";
+        dataDef[0].price = 100;
+        dataDef[0].intro = "牛肉麵";
+
+        dataDef[1] = new DataDef();
+        dataDef[1].img_url = "http://net.jcin.com.tw/p2.jpg";
+        dataDef[1].price = 120;
+        dataDef[1].intro = "肉絲麵";
+
+        dataDef[2] = new DataDef();
+        dataDef[2].img_url = "http://net.jcin.com.tw/p3.jpg";
+        dataDef[2].price = 80;
+        dataDef[2].intro = "湯麵";
+
 
         //String imageFileURL = "http://net.jcin.com.tw/p1.jpg";
         myImageView = (ImageView) findViewById(R.id.imageView);
@@ -50,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         //String url = "http://net.jcin.com.tw/p1.jpg";
         //Picasso.with(this).load(url).into(myImageView);
 
-        BAdapter adapter = new BAdapter(MainActivity.this, R.layout.menu_item, images_src);
+        BAdapter adapter = new BAdapter(MainActivity.this, R.layout.menu_item, dataDef);
 
         //new DownloadImageTask(myImageView).execute(imageFileURL); // 載入圖片
 
@@ -80,63 +95,54 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private class BAdapter extends ArrayAdapter {
 
-        private Context context;
+        private Context act_context;
         private LayoutInflater inflater;
         private int resourceId;
 
         private String[] imageUrls;
+        private DataDef[] dataDefs;
 
-
-        public BAdapter(Context context, int resource, String[] objects) {
+        public BAdapter(Context context, int resource, DataDef[] objects) {
             super(context, resource, objects);
 
-            this.context = context;
+            this.act_context = context;
             this.resourceId = resource;
-            this.imageUrls = (String[]) objects;
+            this.dataDefs = (DataDef[]) objects;
 
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ImageView img_res;
-            TextView text_res;
+            TextView txt_intro;
+            TextView txt_price;
 
             if (convertView == null) {
 
-                LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+                LayoutInflater inflater = ((Activity) act_context).getLayoutInflater();
                 convertView = inflater.inflate(this.resourceId, parent, false);
+
 
                 //convertView = inflater.inflate(this.resourceId, parent, false);
                 img_res = (ImageView) convertView.findViewById(R.id.imageMenu);
-                text_res = (TextView) convertView.findViewById(R.id.textMenuContext);
+                txt_intro = (TextView) convertView.findViewById(R.id.textMenuContext);
+                txt_price = (TextView) convertView.findViewById(R.id.textPrice);
 
             } else {
                 img_res = (ImageView) convertView.findViewById(R.id.imageMenu);
-                text_res = (TextView) convertView.findViewById(R.id.textMenuContext);
+                txt_intro = (TextView) convertView.findViewById(R.id.textMenuContext);
+                txt_price = (TextView) convertView.findViewById(R.id.textPrice);
             }
 
-            String url = this.imageUrls[position];
-            text_res.setText("炒飯");
-            Picasso.with(context).load(url).into(img_res);
+            DataDef def = this.dataDefs[position];
+
+            txt_intro.setText(def.intro);
+            txt_price.setText(String.valueOf(def.price));
+            Picasso.with(act_context).load(def.img_url).resize(150, 150).into(img_res);
+
             return convertView;
         }
     }
@@ -159,8 +165,6 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
-
-
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -195,4 +199,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class DataDef{
+
+        public String img_url ;
+        public String intro;
+        public int price;
+
+    }
 }
