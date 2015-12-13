@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         lv_menu_item = (ListView) findViewById(R.id.listView);
 
         int images[] = {R.drawable.p1, R.drawable.p2, R.drawable.p3};
-        String menu_name[] = {"炒飯", "炒面", "牛肉面"};
+        String menu_name[] = {"炒飯", "炒麵", "牛肉麵"};
 
         ArrayList<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
 
@@ -46,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        SimpleAdapter adapter = new SimpleAdapter(this, items, R.layout.menu_item, new String[]{"pic", "text"}, new int[]{R.id.imageMenu, R.id.textMenuContext});
+        SimpleAdapter adapter = new SimpleAdapter(this, items,
+                R.layout.menu_item,
+                new String[]{"pic", "text"},
+                new int[]{R.id.imageMenu, R.id.textMenuContext}
+        );
         lv_menu_item.setAdapter(adapter);
 
     }
@@ -59,8 +63,10 @@ public class MainActivity extends AppCompatActivity {
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
+            //Bitmap bitmap = BitmapFactory.decodeStream(input);
+            //return bitmap;
+            return BitmapFactory.decodeStream(input);
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
