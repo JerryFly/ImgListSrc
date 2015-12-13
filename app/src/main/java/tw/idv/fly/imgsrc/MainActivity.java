@@ -1,14 +1,24 @@
 package tw.idv.fly.imgsrc;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +26,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ImageView myImageView;
     ListView lv_menu_item;
+
+    public static String[] images_src = {
+            "http://net.jcin.com.tw/p1.jpg",
+            "http://net.jcin.com.tw/p2.jpg",
+            "http://net.jcin.com.tw/p3.jpg"
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,33 +45,102 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //String imageFileURL = "http://net.jcin.com.tw/p1.jpg";
-        //myImageView = (ImageView)findViewById(R.id.imageView);
+        myImageView = (ImageView) findViewById(R.id.imageView);
+
+        //String url = "http://net.jcin.com.tw/p1.jpg";
+        //Picasso.with(this).load(url).into(myImageView);
+
+        BAdapter adapter = new BAdapter(MainActivity.this, R.layout.menu_item, images_src);
 
         //new DownloadImageTask(myImageView).execute(imageFileURL); // 載入圖片
 
+
         lv_menu_item = (ListView) findViewById(R.id.listView);
 
-        int images[] = {R.drawable.p1, R.drawable.p2, R.drawable.p3};
-        String menu_name[] = {"炒飯", "炒麵", "牛肉麵"};
+        //int images[] = {R.drawable.p1, R.drawable.p2, R.drawable.p3};
+        //String menu_name[] = {"炒飯", "炒麵", "牛肉麵"};
 
-        ArrayList<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
+        //ArrayList<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
 
-        for (int i = 0; i < images.length; i++) {
-            HashMap<String, Object> menu_data = new HashMap<String, Object>();
-            menu_data.put("pic", images[i]);
-            menu_data.put("text", menu_name[i]);
-            items.add(menu_data);
-        }
+        //for (int i = 0; i < images.length; i++) {
+        //    HashMap<String, Object> menu_data = new HashMap<String, Object>();
+        //    menu_data.put("pic", images[i]);
+        //    menu_data.put("text", menu_name[i]);
+        //    items.add(menu_data);
+        //}
 
 
-        SimpleAdapter adapter = new SimpleAdapter(this, items,
-                R.layout.menu_item,
-                new String[]{"pic", "text"},
-                new int[]{R.id.imageMenu, R.id.textMenuContext}
-        );
+        //SimpleAdapter adapter = new SimpleAdapter(this, items,
+        //        R.layout.menu_item,
+        //        new String[]{"pic", "text"},
+        //        new int[]{R.id.imageMenu, R.id.textMenuContext}
+        //);
         lv_menu_item.setAdapter(adapter);
 
+
     }
+
+
+    private class BAdapter extends ArrayAdapter {
+
+        private Context context;
+        private LayoutInflater inflater;
+        private int resourceId;
+
+        private String[] imageUrls;
+
+
+        public BAdapter(Context context, int resource, String[] objects) {
+            super(context, resource, objects);
+
+            this.context = context;
+            this.resourceId = resource;
+            this.imageUrls = (String[]) objects;
+
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ImageView img_res;
+            TextView text_res;
+
+            if (convertView == null) {
+
+                LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+                convertView = inflater.inflate(this.resourceId, parent, false);
+
+                //convertView = inflater.inflate(this.resourceId, parent, false);
+                img_res = (ImageView) convertView.findViewById(R.id.imageMenu);
+                text_res = (TextView) convertView.findViewById(R.id.textMenuContext);
+
+            } else {
+                img_res = (ImageView) convertView.findViewById(R.id.imageMenu);
+                text_res = (TextView) convertView.findViewById(R.id.textMenuContext);
+            }
+
+            String url = this.imageUrls[position];
+            text_res.setText("炒飯");
+            Picasso.with(context).load(url).into(img_res);
+            return convertView;
+        }
+    }
+
 
     //讀取網路圖片，型態為Bitmap
     private static Bitmap getBitmapFromURL(String imageUrl) {
