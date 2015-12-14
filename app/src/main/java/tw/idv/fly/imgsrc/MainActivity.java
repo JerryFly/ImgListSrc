@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //String imageFileURL = "http://net.jcin.com.tw/p1.jpg";
-        myImageView = (ImageView) findViewById(R.id.imageView);
+        //myImageView = (ImageView) findViewById(R.id.imageView);
 
         //String url = "http://net.jcin.com.tw/p1.jpg";
         //Picasso.with(this).load(url).into(myImageView);
@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -199,9 +200,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class DataDef{
+    private class DataDef {
+        public DataDef() {
 
-        public String img_url ;
+        }
+
+        public String img_url;
         public String intro;
         public int price;
 
