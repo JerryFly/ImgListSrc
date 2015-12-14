@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     public static String[] images_src = {
             "http://net.jcin.com.tw/p1.jpg",
             "http://net.jcin.com.tw/p2.jpg",
-            "http://net.jcin.com.tw/p3.jpg"
+            "http://net.jcin.com.tw/p3.jpg",
+            "http://net.jcin.com.tw/p4.jpg"
     };
 
     DataDef[] dataDef;
